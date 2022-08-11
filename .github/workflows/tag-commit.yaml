@@ -12,13 +12,13 @@ jobs:
         run: |
           git config user.name "${GITHUB_ACTOR}"
           git config user.email "${GITHUB_ACTOR}@users.noreply.github.com"
-          TAG_NAME="$(git rev-parse --short HEAD)"
-          LATEST_TAG_NAME="latest"
+          TAG_NAME="release/$(git rev-parse --short HEAD)"
+          LATEST_TAG_NAME="release/latest"
 
           if [ $(git tag -l "${TAG_NAME}") ]; then
             echo "${TAG_NAME} already exists, skipping"
           else
-            git tag -a "${TAG_NAME}" -m "Release ${{ github.events.inputs.application }} on $(date "+%Y%m%d") from $(git rev-parse --short HEAD)"
+            git tag -a "${TAG_NAME}" -m "Release ${{ github.events.inputs.application }} on $(date "+%Y-%m-%d") from $(git rev-parse --short HEAD)"
             git push origin "${TAG_NAME}"
           fi
 
