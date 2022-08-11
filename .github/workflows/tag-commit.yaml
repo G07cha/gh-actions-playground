@@ -2,6 +2,24 @@ name: Tag commit
 
 on:
   workflow_dispatch:
+    inputs:
+      environment:
+        type: choice
+        description: What environment to deploy to
+        required: true
+        options:
+          - dev
+          - qa
+          - uat
+          - prod
+      application:
+        type: choice
+        description: Which app to deploy
+        required: true
+        options:
+          - app1
+          - app2
+          - app3
 
 jobs:
   tag:
@@ -9,11 +27,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Create tags
+        if: ${{ github.event.inputs.environment == 'prod' }}
         run: |
           git config user.name "${GITHUB_ACTOR}"
           git config user.email "${GITHUB_ACTOR}@users.noreply.github.com"
-          TAG_NAME="release/$(git rev-parse --short HEAD)"
-          LATEST_TAG_NAME="release/latest"
+          TAG_NAME="release/${{ github.event.inputs.application }}-$(git rev-parse --short HEAD)"
+          LATEST_TAG_NAME="release/${{ github.event.inputs.application }}-latest"
 
           if [ $(git tag -l "${TAG_NAME}") ]; then
             echo "${TAG_NAME} already exists, skipping"
