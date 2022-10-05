@@ -1,0 +1,25 @@
+name: If expressions
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        type: choice
+        description: What environment to deploy to
+        required: true
+        options:
+          - dev
+          - qa
+          - uat
+          - prod
+
+jobs:
+  tag:
+    runs-on: ubuntu-latest
+    steps:
+      - if: inputs.environment == 'prod'
+        run: echo "Run for prod"
+      - if: inputs.doesnotexists
+        run: echo "Should not run"
+      - if: inputs.environment
+        run: echo "Should run"
