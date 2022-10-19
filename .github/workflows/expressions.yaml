@@ -22,4 +22,8 @@ jobs:
       - if: inputs.doesnotexists
         run: echo "Should not run"
       - if: inputs.environment
-        run: echo "Should run"
+        run: |
+          echo "Should run"
+          echo "FOO=true" >> $GITHUB_ENV
+      - if: env.FOO == 'true'
+        run: echo "Env variable works"
